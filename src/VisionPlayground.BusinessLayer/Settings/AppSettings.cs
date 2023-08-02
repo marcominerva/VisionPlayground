@@ -11,4 +11,8 @@ public class AppSettings
     public string VisionEndpoint { get; init; }
 
     public string VisionApiKey { get; init; }
+
+    public string TranslatorEndpoint { get; init; }
+
+    public string TranslatorApiKey { get; init; }
 }
