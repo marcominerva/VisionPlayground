@@ -7,10 +7,10 @@ on:
   workflow_dispatch:
 
 env:
-  AZURE_WEBAPP_NAME: editorgpt
+  AZURE_WEBAPP_NAME: visionplayground
   AZURE_WEBAPP_PACKAGE_PATH: './published'
   NET_VERSION: '7.x'
-  PROJECT_NAME: src/EditorGpt
+  PROJECT_NAME: src/VisionPlayground
   RUNTIME: linux-x64
 
 jobs:

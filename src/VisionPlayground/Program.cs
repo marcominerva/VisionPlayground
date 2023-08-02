@@ -2,6 +2,7 @@ using System.Diagnostics;
 using System.Text.Json.Serialization;
 using System.Threading.RateLimiting;
 using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.OpenApi.Models;
 using MinimalHelpers.OpenApi;
@@ -21,6 +22,11 @@ builder.Configuration.AddJsonFile("appsettings.local.json", optional: true);
 // Add services to the container.
 var settings = builder.Services.ConfigureAndGet<AppSettings>(builder.Configuration, nameof(AppSettings));
 var swagger = builder.Services.ConfigureAndGet<SwaggerSettings>(builder.Configuration, nameof(SwaggerSettings));
+
+builder.Services.Configure<FormOptions>(options =>
+{
+    options.MultipartBodyLengthLimit = settings.MaxUploadSize;
+});
 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddRazorPages();
@@ -56,7 +62,7 @@ if (swagger.IsEnabled)
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen(options =>
     {
-        options.SwaggerDoc("v1", new OpenApiInfo { Title = "VisionPlayground API", Version = "v1" });
+        options.SwaggerDoc("v1", new OpenApiInfo { Title = "Vision Playground API", Version = "v1" });
 
         options.AddDefaultResponse();
         options.AddMissingSchemas();
@@ -154,7 +160,7 @@ if (swagger.IsEnabled)
     app.UseSwagger();
     app.UseSwaggerUI(options =>
     {
-        options.SwaggerEndpoint("/swagger/v1/swagger.json", "VisionPlayground API v1");
+        options.SwaggerEndpoint("/swagger/v1/swagger.json", "Vision Playground API v1");
         options.InjectStylesheet("/css/swagger.css");
     });
 }

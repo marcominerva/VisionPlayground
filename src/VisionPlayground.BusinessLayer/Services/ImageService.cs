@@ -1,8 +1,8 @@
 ﻿using System.Net.Http.Headers;
 using System.Text.Json;
+using OperationResults;
 using VisionPlayground.BusinessLayer.Services.Interfaces;
 using VisionPlayground.Shared.Models;
-using OperationResults;
 
 namespace VisionPlayground.BusinessLayer.Services;
 
@@ -17,7 +17,7 @@ public class ImageService : IImageService
 
     public async Task<Result<ImageAnalyzeResponse>> AnalyzeAsnyc(Stream stream, string contentType)
     {
-        using var request = new HttpRequestMessage(HttpMethod.Post, "computervision/imageanalysis:analyze?features=caption,denseCaptions&model-version=latest&api-version=2023-02-01-preview")
+        using var request = new HttpRequestMessage(HttpMethod.Post, "computervision/imageanalysis:analyze?features=caption&model-version=latest&api-version=2023-02-01-preview")
         {
             Content = new StreamContent(stream)
             {

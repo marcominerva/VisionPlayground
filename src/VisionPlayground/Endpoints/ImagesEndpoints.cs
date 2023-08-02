@@ -1,7 +1,7 @@
-﻿using VisionPlayground.BusinessLayer.Services.Interfaces;
-using VisionPlayground.Shared.Models;
-using MinimalHelpers.Routing;
+﻿using MinimalHelpers.Routing;
 using OperationResults.AspNetCore.Http;
+using VisionPlayground.BusinessLayer.Services.Interfaces;
+using VisionPlayground.Shared.Models;
 
 namespace VisionPlayground.Endpoints;
 

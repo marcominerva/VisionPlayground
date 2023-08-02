@@ -6,6 +6,8 @@ public class AppSettings
 
     public string ApplicationDescription { get; init; } = "Chat using AI";
 
+    public int MaxUploadSize { get; init; }
+
     public string VisionEndpoint { get; init; }
 
     public string VisionApiKey { get; init; }
