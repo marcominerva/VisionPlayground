@@ -1,0 +1,53 @@
+﻿@page
+@model IndexModel
+
+@section RightCommands
+    {
+    <div x-data>
+        <button type="button" class="btn btn-primary" id="capture" x-on:click="$dispatch('refresh')" title="Take a Photo">
+            <i class="bi bi-camera-fill"></i>
+        </button>
+    </div>
+}
+
+<div class="row" x-data="chat" @@refresh.window="takePhoto($refs.player)">
+    <div class="col-12 col-md-6 text-center">
+        <video id="player" playsinline autoplay width="320" x-ref="player"></video>
+    </div>
+    <div class="col-12 col-md-6">
+        <div x-cloak x-show="isBusy">
+            <div class="mt-5 text-center">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>
+        </div>
+        <span x-show="description" x-text="description + ' (' + (confidence*100).toFixed(2) + '%)'"></span>
+        <template x-if="errorMessage">
+            <div class="alert alert-danger fade show" role="alert">
+                <i class="bi bi-exclamation-triangle-fill me-2" aria-hidden="true"></i>
+                <span x-text="errorMessage"></span>
+            </div>
+        </template>
+    </div>
+</div>
+
+@section Scripts
+    {
+    <script>
+        const player = document.getElementById('player');
+
+        const constraints = {
+            video: {
+                facingMode: "environment",
+            }
+        };
+
+        navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
+            // Attach the video stream to the video element and autoplay.
+            player.srcObject = stream;
+        });
+
+        document.addEventListener("alpine:init", chat);
+    </script>
+}

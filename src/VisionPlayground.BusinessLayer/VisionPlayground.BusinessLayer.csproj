@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net7.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="OperationResultTools" Version="1.0.12" />
+        <PackageReference Include="TinyHelpers" Version="2.0.35" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\VisionPlayground.Shared\VisionPlayground.Shared.csproj" />
+    </ItemGroup>
+
+</Project>
