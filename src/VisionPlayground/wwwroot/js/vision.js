@@ -6,8 +6,6 @@
         isBusy: false,
 
         takePhoto: async function (player) {
-            alert(language);
-
             if (this.isBusy)
                 return;
 
