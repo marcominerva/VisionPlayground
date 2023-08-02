@@ -10,7 +10,7 @@
     </div>
 }
 
-<div class="row" x-data="chat" @@refresh.window="takePhoto($refs.player)">
+<div class="row" x-data="vision" @@refresh.window="takePhoto($refs.player)">
     <div class="col-12 col-md-6 text-center">
         <video id="player" playsinline autoplay width="320" x-ref="player"></video>
     </div>
@@ -48,6 +48,7 @@
             player.srcObject = stream;
         });
 
-        document.addEventListener("alpine:init", chat);
-    </script>
+        document.addEventListener("alpine:init", () => {
+            vision('@Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName');
+        });</script>
 }

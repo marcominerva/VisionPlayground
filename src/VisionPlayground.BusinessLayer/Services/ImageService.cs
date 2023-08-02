@@ -9,10 +9,12 @@ namespace VisionPlayground.BusinessLayer.Services;
 public class ImageService : IImageService
 {
     private readonly HttpClient httpClient;
+    private readonly ITranslatorService translatorService;
 
-    public ImageService(HttpClient httpClient)
+    public ImageService(HttpClient httpClient, ITranslatorService translatorService)
     {
         this.httpClient = httpClient;
+        this.translatorService = translatorService;
     }
 
     public async Task<Result<ImageAnalyzeResponse>> AnalyzeAsnyc(Stream stream, string contentType)
@@ -34,10 +36,17 @@ public class ImageService : IImageService
         using var contentStream = await response.Content.ReadAsStreamAsync();
         using var document = JsonDocument.Parse(contentStream);
 
-        var text = document.RootElement.GetProperty("captionResult").GetProperty("text").GetString();
+        var caption = document.RootElement.GetProperty("captionResult").GetProperty("text").GetString();
         var confidence = document.RootElement.GetProperty("captionResult").GetProperty("confidence").GetSingle();
 
-        var result = new ImageAnalyzeResponse(text, confidence);
+        var language = Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName;
+        if (language != "en")
+        {
+            var translationResponse = await translatorService.TranslatorAsync(caption, language);
+            caption = translationResponse.Content.Text;
+        }
+
+        var result = new ImageAnalyzeResponse(caption, confidence);
         return result;
     }
 }

@@ -1,11 +1,13 @@
-﻿function chat(language) {
-    Alpine.data("chat", () => ({
+﻿function vision(language) {
+    Alpine.data("vision", () => ({
         description: null,
         confidence: 0,
         errorMessage: null,
         isBusy: false,
 
         takePhoto: async function (player) {
+            alert(language);
+
             if (this.isBusy)
                 return;
 

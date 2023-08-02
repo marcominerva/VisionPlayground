@@ -1,8 +1,10 @@
 using System.Diagnostics;
+using System.Globalization;
 using System.Text.Json.Serialization;
 using System.Threading.RateLimiting;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http.Features;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.OpenApi.Models;
 using MinimalHelpers.OpenApi;
@@ -31,6 +33,15 @@ builder.Services.Configure<FormOptions>(options =>
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddRazorPages();
 
+builder.Services.AddRequestLocalization(options =>
+{
+    var supportedCultures = CultureInfo.GetCultures(CultureTypes.AllCultures);
+
+    options.SupportedCultures = supportedCultures;
+    options.SupportedUICultures = supportedCultures;
+    options.DefaultRequestCulture = new RequestCulture("en-US");
+});
+
 builder.Services.AddWebOptimizer(minifyCss: true, minifyJavaScript: builder.Environment.IsProduction());
 
 builder.Services.AddProblemDetails(options =>
@@ -49,6 +60,12 @@ builder.Services.AddHttpClient<IImageService, ImageService>(client =>
 {
     client.BaseAddress = new Uri(settings.VisionEndpoint);
     client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", settings.VisionApiKey);
+});
+
+builder.Services.AddHttpClient<ITranslatorService, TranslatorService>(client =>
+{
+    client.BaseAddress = new Uri(settings.TranslatorEndpoint);
+    client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", settings.TranslatorApiKey);
 });
 
 builder.Services.ConfigureHttpJsonOptions(options =>
@@ -166,6 +183,7 @@ if (swagger.IsEnabled)
 }
 
 app.UseRouting();
+app.UseRequestLocalization();
 
 app.UseWhen(context => context.IsApiRequest(), builder =>
 {
