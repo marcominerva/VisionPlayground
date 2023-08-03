@@ -4,11 +4,31 @@
 @section RightCommands
     {
     <div x-data>
-        <button type="button" class="btn btn-primary" id="capture" x-on:click="$dispatch('refresh')" title="Take a Photo">
+        <button x-cloak x-show="$store.camera.isAvailable" type="button" class="btn btn-primary" id="capture" x-on:click="$dispatch('refresh')" title="Take a Photo">
             <i class="bi bi-camera-fill"></i>
         </button>
     </div>
 }
+
+<div x-data>
+    <template x-if="$store.camera.isAvailable == false">
+        <div class="row">
+            <div class="d-flex align-items-center justify-content-center">
+                <div class="text-center">
+                    <h1 class="display-1 fw-bold"><i class="bi bi-camera-video-off-fill"></i></h1>
+                    <p class="fs-3"><span class="text-danger">Ops!</span> Camera not available.</p>
+                    <p class="lead">
+                        You need to give the site access to your camera.
+                    </p>
+                    <p class="lead">
+                        Go to your Browser settings and allow access to it. It may be necessary to reload the page after the change.
+                    </p>
+                    <a title="Reload" href="/" class="btn btn-primary"><i class="bi bi-arrow-clockwise"></i> Reload</a>
+                </div>
+            </div>
+        </div>
+    </template>
+</div>
 
 <div class="row" x-data="vision" @@refresh.window="takePhoto($refs.player)">
     <div class="col-12 col-md-6 text-center">
@@ -43,12 +63,20 @@
             }
         };
 
-        navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
+        navigator.mediaDevices.getUserMedia(constraints).then(stream => {
             // Attach the video stream to the video element and autoplay.
+            Alpine.store('camera').isAvailable = true;
             player.srcObject = stream;
+        }).catch(error => {
+            Alpine.store('camera').isAvailable = false;
         });
 
         document.addEventListener("alpine:init", () => {
+            Alpine.store('camera', {
+                isAvailable: null
+            });
+
             vision('@Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName');
-        });</script>
+        });
+    </script>
 }

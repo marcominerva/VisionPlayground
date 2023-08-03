@@ -16,7 +16,7 @@
             canvas.width = 320;
             canvas.height = 240;
 
-            const context = canvas.getContext('2d');
+            const context = canvas.getContext("2d");
             context.drawImage(player, 0, 0, canvas.width, canvas.height);
 
             try {
