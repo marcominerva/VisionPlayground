@@ -1,4 +1,5 @@
 ﻿using System.Net.Http.Headers;
+using System.Net.Mime;
 using System.Text.Json;
 using OperationResults;
 using VisionPlayground.BusinessLayer.Services.Interfaces;
@@ -25,7 +26,7 @@ public class ImageService : IImageService
             {
                 Headers =
                 {
-                    ContentType = new MediaTypeHeaderValue("application/octet-stream")
+                    ContentType = new MediaTypeHeaderValue(MediaTypeNames.Application.Octet)
                 }
             }
         };
