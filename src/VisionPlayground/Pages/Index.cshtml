@@ -30,7 +30,7 @@
     </template>
 </div>
 
-<div class="row" x-data="vision" @@refresh.window="takePhoto($refs.player)">
+<div class="row" x-data="vision" @@refresh.window="player.pause(); await takePhoto($refs.player); setTimeout(() => player.play(), 5000)">
     <div class="col-12 col-md-6 text-center">
         <video id="player" playsinline autoplay width="320" x-ref="player"></video>
     </div>
