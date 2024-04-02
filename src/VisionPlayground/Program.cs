@@ -1,14 +1,9 @@
-using System.Diagnostics;
 using System.Globalization;
 using System.Text.Json.Serialization;
 using System.Threading.RateLimiting;
-using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Localization;
-using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.OpenApi.Models;
-using MinimalHelpers.OpenApi;
-using MinimalHelpers.Routing;
 using OperationResults.AspNetCore.Http;
 using TinyHelpers.AspNetCore.Extensions;
 using TinyHelpers.AspNetCore.Swagger;
@@ -44,17 +39,8 @@ builder.Services.AddRequestLocalization(options =>
 
 builder.Services.AddWebOptimizer(minifyCss: true, minifyJavaScript: builder.Environment.IsProduction());
 
-builder.Services.AddProblemDetails(options =>
-{
-    options.CustomizeProblemDetails = context =>
-    {
-        var statusCode = context.ProblemDetails.Status.GetValueOrDefault(StatusCodes.Status500InternalServerError);
-        context.ProblemDetails.Type ??= $"https://httpstatuses.io/{statusCode}";
-        context.ProblemDetails.Title ??= ReasonPhrases.GetReasonPhrase(statusCode);
-        context.ProblemDetails.Instance ??= context.HttpContext.Request.Path;
-        context.ProblemDetails.Extensions["traceId"] = Activity.Current?.Id ?? context.HttpContext.TraceIdentifier;
-    };
-});
+builder.Services.AddDefaultProblemDetails();
+builder.Services.AddDefaultExceptionHandler();
 
 builder.Services.AddHttpClient<IImageService, ImageService>(client =>
 {
@@ -82,7 +68,6 @@ if (swagger.IsEnabled)
         options.SwaggerDoc("v1", new OpenApiInfo { Title = "Vision Playground API", Version = "v1" });
 
         options.AddDefaultResponse();
-        options.AddMissingSchemas();
     });
 }
 
@@ -137,34 +122,7 @@ app.UseWhen(context => context.IsWebRequest(), builder =>
 
 app.UseWhen(context => context.IsApiRequest(), builder =>
 {
-    if (!app.Environment.IsDevelopment())
-    {
-        // Error handling
-        builder.UseExceptionHandler(new ExceptionHandlerOptions
-        {
-            AllowStatusCode404Response = true,
-            ExceptionHandler = async (HttpContext context) =>
-            {
-                var problemDetailsService = context.RequestServices.GetService<IProblemDetailsService>();
-                var exceptionHandlerFeature = context.Features.Get<IExceptionHandlerFeature>();
-                var error = exceptionHandlerFeature?.Error;
-
-                // Write as JSON problem details
-                await problemDetailsService.WriteAsync(new()
-                {
-                    HttpContext = context,
-                    AdditionalMetadata = exceptionHandlerFeature?.Endpoint?.Metadata,
-                    ProblemDetails =
-                    {
-                        Status = context.Response.StatusCode,
-                        Title = error?.GetType().FullName ?? "An error occurred while processing your request",
-                        Detail = error?.Message
-                    }
-                });
-            }
-        });
-    }
-
+    builder.UseExceptionHandler();
     builder.UseStatusCodePages();
 });
 
