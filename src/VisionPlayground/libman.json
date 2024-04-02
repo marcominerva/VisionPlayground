@@ -3,11 +3,11 @@
     "defaultProvider": "cdnjs",
     "libraries": [
         {
-            "library": "twitter-bootstrap@5.3.2",
+            "library": "twitter-bootstrap@5.3.3",
             "destination": "wwwroot/lib/bootstrap"
         },
         {
-            "library": "bootstrap-icons@1.11.1",
+            "library": "bootstrap-icons@1.11.3",
             "destination": "wwwroot/lib/bootstrap-icons"
         },
         {
@@ -15,7 +15,7 @@
             "destination": "wwwroot/lib/jquery"
         },
         {
-            "library": "alpinejs@3.13.0",
+            "library": "alpinejs@3.13.7",
             "destination": "wwwroot/lib/alpinejs"
         }
     ]
