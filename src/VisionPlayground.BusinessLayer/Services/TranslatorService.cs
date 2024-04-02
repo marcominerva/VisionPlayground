@@ -6,15 +6,8 @@ using VisionPlayground.Shared.Models;
 
 namespace VisionPlayground.BusinessLayer.Services;
 
-public class TranslatorService : ITranslatorService
+public class TranslatorService(HttpClient httpClient) : ITranslatorService
 {
-    private readonly HttpClient httpClient;
-
-    public TranslatorService(HttpClient httpClient)
-    {
-        this.httpClient = httpClient;
-    }
-
     public async Task<Result<TranslationResponse>> TranslatorAsync(string sourceText, string targetLanguage)
     {
         var requestUri = $"translate?api-version=3.0&from=en&to={targetLanguage}";

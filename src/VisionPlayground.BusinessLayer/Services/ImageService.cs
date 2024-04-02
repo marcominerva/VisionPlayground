@@ -7,17 +7,8 @@ using VisionPlayground.Shared.Models;
 
 namespace VisionPlayground.BusinessLayer.Services;
 
-public class ImageService : IImageService
+public class ImageService(HttpClient httpClient, ITranslatorService translatorService) : IImageService
 {
-    private readonly HttpClient httpClient;
-    private readonly ITranslatorService translatorService;
-
-    public ImageService(HttpClient httpClient, ITranslatorService translatorService)
-    {
-        this.httpClient = httpClient;
-        this.translatorService = translatorService;
-    }
-
     public async Task<Result<ImageAnalyzeResponse>> AnalyzeAsnyc(Stream stream, string contentType)
     {
         using var request = new HttpRequestMessage(HttpMethod.Post, "computervision/imageanalysis:analyze?features=caption&model-version=latest&api-version=2023-02-01-preview")

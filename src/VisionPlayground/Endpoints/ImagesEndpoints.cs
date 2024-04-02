@@ -1,13 +1,12 @@
-﻿using MinimalHelpers.Routing;
-using OperationResults.AspNetCore.Http;
+﻿using OperationResults.AspNetCore.Http;
 using VisionPlayground.BusinessLayer.Services.Interfaces;
 using VisionPlayground.Shared.Models;
 
 namespace VisionPlayground.Endpoints;
 
-public class ImagesEndpoints : IEndpointRouteHandler
+public class ImagesEndpoints : IEndpointRouteHandlerBuilder
 {
-    public void MapEndpoints(IEndpointRouteBuilder endpoints)
+    public static void MapEndpoints(IEndpointRouteBuilder endpoints)
     {
         var imageApi = endpoints.MapGroup("/api/images");
 
@@ -15,10 +14,11 @@ public class ImagesEndpoints : IEndpointRouteHandler
             .WithName("UploadImage")
             .Produces<ImageAnalyzeResponse>()
             .ProducesValidationProblem()
+            .DisableAntiforgery()
             .WithOpenApi();
     }
 
-    public async Task<IResult> UploadImageAsync(IFormFile file, IImageService imageService, HttpContext httpContext)
+    public static async Task<IResult> UploadImageAsync(IFormFile file, IImageService imageService, HttpContext httpContext)
     {
         var result = await imageService.AnalyzeAsnyc(file.OpenReadStream(), file.ContentType);
 
