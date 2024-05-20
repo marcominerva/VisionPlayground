@@ -15,7 +15,7 @@
             "destination": "wwwroot/lib/jquery"
         },
         {
-            "library": "alpinejs@3.13.7",
+            "library": "alpinejs@3.13.10",
             "destination": "wwwroot/lib/alpinejs"
         }
     ]
